@@ -14,6 +14,7 @@ import db, {signOutAccount} from "../../firebaseConfig";
 
 import "./Sidebar.css";
 import { useStateValue } from "../../context/StateProvider";
+import { LogoutTwoTone } from "@mui/icons-material";
 
 function Sidebar() {
   const [rooms, setRooms] = useState([]);
@@ -31,7 +32,7 @@ function Sidebar() {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <Avatar src={user.photoURL} title={user.displayName}/>
+        <Avatar src={user.photoURL} title={user.displayName} onClick={() => console.log(user.photoURL)}/>
         <div className="sidebar-header-right">
           <IconButton>
             <DonutLargeIcon />
@@ -40,7 +41,7 @@ function Sidebar() {
             <MessageIcon />
           </IconButton>
           <IconButton onClick={signOutAccount}>
-            <MoreVertIcon/>
+            <LogoutTwoTone/>
           </IconButton>
         </div>
       </div>
