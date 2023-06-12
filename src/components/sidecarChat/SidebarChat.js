@@ -10,7 +10,7 @@ import "./SidebarChat.css";
 
 const SidebarChat = ({ addNewChat, room }) => {
   const [lastMessage, setLastMessage] = useState(null);
-  const randomAvatarGeneratorApi = `https://api.dicebear.com/6.x/adventurer/svg?seed=Midni${Math.random()}&backgroundColor=d1d4f9,c0aede,b6e3f4,ffd5dc,ffdfbf`;
+  const randomAvatarGeneratorApi = (id) => `https://api.dicebear.com/6.x/adventurer/svg?seed=Midni${id}&backgroundColor=d1d4f9,c0aede,b6e3f4,ffd5dc,ffdfbf`;
 
   useEffect(()=>{
 
@@ -41,7 +41,7 @@ const SidebarChat = ({ addNewChat, room }) => {
   return !addNewChat ? (
     <Link to={`rooms/${room.id}`}>
       <div className="sidebar-chat">
-        <Avatar src={randomAvatarGeneratorApi} />
+        <Avatar src={randomAvatarGeneratorApi(room.id)} />
         <div className="sidebar-chat-info">
           <h1>{room.data.name}</h1>
           <p>{lastMessage?.message}</p>

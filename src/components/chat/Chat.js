@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   onSnapshot,
@@ -57,6 +57,16 @@ function Chat() {
     setInput(() => "");
   };
 
+  const scrollToLastMessage = () => {
+    const element = document.getElementById("LastMessage");
+    element.scrollIntoView({
+      behavior: "auto",
+      block: "end",
+      inline: "nearest",
+    });
+  }
+
+
   let lastSeen = messages[messages.length-1]?.message?.timeStamp?.toDate();
   lastSeen = lastSeen ? new Date(lastSeen).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) : "";
 
@@ -81,10 +91,19 @@ function Chat() {
         </div>
       </div>
       <div className="chat-body">
-        {messages.map(({id, message}) => {
-          let time = new Date(message.timeStamp?.toDate()).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        {messages.map(({id, message}, index) => {
+          
+          let time = "Loading...";
+          if(message.timeStamp){
+            time = new Date(message.timeStamp?.toDate()).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+          }
+
+          let isLastIndex = index === messages.length-1;
+          if(isLastIndex) setTimeout(scrollToLastMessage);
+
           return (
             <p
+              id={isLastIndex ? "LastMessage" : ""}
               key = {id}
               className={`chat-message ${
                 user.displayName === message.name && "chat-receiver"
