@@ -40,7 +40,7 @@ function Sidebar() {
           <IconButton>
             <MessageIcon />
           </IconButton>
-          <IconButton onClick={signOutAccount}>
+          <IconButton title="sign out" onClick={signOutAccount}>
             <LogoutTwoTone/>
           </IconButton>
         </div>

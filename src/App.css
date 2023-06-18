@@ -1,6 +1,7 @@
 .app {
   background: #dadbd3;
   height: 100vh;
+  min-width: max-content;
   display: grid;
   place-items: center;
 }
@@ -8,19 +9,29 @@
 .app-body {
   display: flex;
   height: 90vh;
-  min-width: 90vw;
-  max-width: 95vw;
+  width: 90vw;
+  min-width: 502px;
   background: #ededed;
   box-shadow: -1px 4px 20px -6px rgba(0,0,0,0.5);
 }
 
 .empty-container {
-  flex:1;
-  display: grid;
-  place-items: center;
+  flex: 0.65;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-container .lottie {
+  height: 300px;
+  width: 300px; 
 }
 
 .empty-container p {
+  font-family: Roboto;
   font-weight: 600;
   font-size: 25px;
+  letter-spacing: 1px;
+  color: rgb(60, 169, 60);
 }

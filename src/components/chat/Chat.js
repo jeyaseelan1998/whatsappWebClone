@@ -103,7 +103,6 @@ function Chat() {
 
           return (
             <p
-              id={isLastIndex ? "LastMessage" : ""}
               key = {id}
               className={`chat-message ${
                 user.displayName === message.name && "chat-receiver"
@@ -115,6 +114,7 @@ function Chat() {
             </p>
           );
         })}
+        <div id="LastMessage"/>
       </div>
       <div className="chat-footer">
         <InsertEmoticon />
