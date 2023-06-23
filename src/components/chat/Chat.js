@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   onSnapshot,
@@ -19,6 +19,12 @@ import {
 
 import { useStateValue } from "../../context/StateProvider";
 import db, { createMessage } from "../../firebaseConfig";
+
+import ChatMoreOptions from "../chatMoreOptions/ChatMoreOptions";
+import Loading from "../loading/Loading";
+
+import {groupByDate} from "../../utils/groupByDate";
+
 import "./Chat.css";
 
 function Chat() {
@@ -26,7 +32,9 @@ function Chat() {
   const [room, setRoom] = useState(null);
   const [messages, setMessages] = useState([]);
   let { roomId } = useParams();
-  const [{ user }] = useStateValue();
+  const [{ user, isLoading }] = useStateValue();
+
+  const [isMoreOptionsShown, setIsMoreOptionsShown] = useState(false);
 
   useEffect(() => {
     let unsubscribe = false;
@@ -37,13 +45,16 @@ function Chat() {
       onSnapshot(docRef, (snapshot) => {
         setRoom(() => snapshot.data());
       });
-
+      
       const subCollectionRef = collection(docRef, "messages");
       const q = query(subCollectionRef, orderBy("timeStamp", "asc"));
       
       unsubscribe = onSnapshot(q, (snapshot) => {
-        let messages = snapshot.docs.map((doc) => ({id:doc.id, message:doc.data()}));
-        setMessages(() => messages);
+        let messages = snapshot.docs.map((doc) => ({ id: doc.id, message: doc.data() }));
+        
+        // groupByDate(messages)
+
+        setMessages(() => groupByDate(messages));
       });
     }
 
@@ -65,10 +76,18 @@ function Chat() {
       inline: "nearest",
     });
   }
+  const toggleMoreOptions = () => {
+    setIsMoreOptionsShown(state => !state);
+  }
 
-
-  let lastSeen = messages[messages.length-1]?.message?.timeStamp?.toDate();
+  let lastSeen = messages[messages.length - 1]?.message?.timeStamp?.toDate();
   lastSeen = lastSeen ? new Date(lastSeen).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) : "";
+
+  if(isLoading) {
+    return <div className="loading-container">
+      <Loading/>
+    </div>
+  }
 
   return (
     <div className="chat">
@@ -85,36 +104,48 @@ function Chat() {
           <IconButton>
             <AttachFile />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={toggleMoreOptions}>
             <MoreVert />
           </IconButton>
         </div>
+        {
+          isMoreOptionsShown && <ChatMoreOptions roomId={roomId} onCloseMoreOptions={toggleMoreOptions} />
+        }
+
       </div>
       <div className="chat-body">
-        {messages.map(({id, message}, index) => {
-          
-          let time = "Loading...";
-          if(message.timeStamp){
-            time = new Date(message.timeStamp?.toDate()).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-          }
+        {
+          Object.keys(messages).map((date, index) => {
+            return (
+              <>
+                <p className="chat-date">{date}</p>
+                {messages[date].map(({ id, message }, index) => {
+        
+                  let isLastIndex = index === Object.keys(messages).length - 1;
+                  if (isLastIndex) setTimeout(scrollToLastMessage);
 
-          let isLastIndex = index === messages.length-1;
-          if(isLastIndex) setTimeout(scrollToLastMessage);
-
-          return (
-            <p
-              key = {id}
-              className={`chat-message ${
-                user.displayName === message.name && "chat-receiver"
-              }`}
-            >
-              <span className="chat-name">{message.name}</span>
-              {message.message}
-              <span className="time-stamp">{time}</span>
-            </p>
-          );
-        })}
-        <div id="LastMessage"/>
+                  let time = "Loading...";
+                  if (message.timeStamp) {
+                    time = new Date(message.timeStamp?.toDate()).toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+                  }
+        
+                  return (
+                    <p
+                      key={id}
+                      className={`chat-message ${user.displayName === message.name && "chat-receiver"
+                        }`}
+                    >
+                      <span className="chat-name">{message.name}</span>
+                      {message.message}
+                      <span className="time-stamp">{time}</span>
+                    </p>
+                  );
+                })}
+              </>
+            )
+          })
+        }
+        <div id="LastMessage"></div>
       </div>
       <div className="chat-footer">
         <InsertEmoticon />

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, doc, serverTimestamp} from 'firebase/firestore';
+import { getFirestore, collection, addDoc, doc, serverTimestamp, deleteDoc} from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 
@@ -27,6 +27,17 @@ export const createRoom = async(roomName) => {
       name : roomName
     });
     return {id:documentRef.id, data: {name: roomName}};
+  } catch(error) {
+    console.log(error, "erron in creating room");
+  }
+}
+
+export const deleteRoom = async(roomId) => {
+  try {
+    let collectionRef = collection(db, 'rooms');
+    const documentRef = doc(collectionRef, roomId);
+    const res = await deleteDoc(documentRef);
+    console.log(res, "chat room deleted")
   } catch(error) {
     console.log(error, "erron in creating room");
   }

@@ -7,26 +7,66 @@
 }
 
 .login-container {
+    min-height: 350px;
+    min-width: 350px;
     background-color: #fff;
-    padding: 100px;
     text-align: center;
     border-radius: 10px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .login-container img {
-    height: 100px;
+    width: 90px;
     object-fit: contain;
-    margin-bottom: 40px;
+    margin-bottom: 45px;
 }
 
 .login-container button {
     text-transform: inherit !important;
     background-color: #0a8d48;
     color: #fff;
-    margin-top: 50px;
+    margin-bottom: 10px;
 }
 
-.login-container button:hover {
+.login-container .google-sign-in-button:hover {
     background-color: #23a45f;
+}
+
+.login-text {
+    display: none;
+}
+
+.mobile-login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-login-form>input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgb(54, 240, 150);
+    outline: none;
+    letter-spacing: 3px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: Roboto;
+    text-align: center;
+    color: #15ad5c;
+}
+
+.mobile-login-form>input:focus {
+    outline: 2px solid #23a45f;
+}
+
+.login-container .phone-login-button {
+    background-image: linear-gradient(to right, rgb(14, 202, 89), rgba(15, 117, 206, 0.267));   
+}
+
+.login-container .phone-login-button:hover {
+    background-color: rgb(14, 202, 89);
 }

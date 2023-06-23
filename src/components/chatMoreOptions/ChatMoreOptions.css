@@ -1,0 +1,35 @@
+.chat-more-options-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: transparent;
+    backdrop-filter: blur(12px);
+    border-radius: 5px;
+    padding: 10px;
+    min-width: 110px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    z-index: 2;
+}
+
+.chat-more-options-container .option {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 10px 10px 10px;
+    transition: 0.4s;
+    border-radius: 8px;
+}
+.chat-more-options-container .option.delete {
+    color: red;
+}
+.chat-more-options-container .option.delete:hover {
+    background-color: red;
+    color: white;
+}
+
+.chat-more-options-container .option.close:hover{
+    background-color: black;
+    color: white;
+}

@@ -1,12 +1,12 @@
 import React from "react";
 import { Button } from "@mui/material";
 
+import Loading from "../loading/Loading";
+
 import { signInithGooglePopup } from "../../firebaseConfig";
 
 import { useStateValue } from "../../context/StateProvider";
 import { actionTypes } from "../../context/reducer";
-import { Player } from "@lottiefiles/react-lottie-player";
-import loading_lottie_file from '../../lottie_files/loading_gray.json';
 
 import "./Login.css";
 
@@ -14,33 +14,34 @@ const Login = () => {
   const [{ isLoading }, dispatch] = useStateValue();
 
   const loginEvent = async () => {
+    dispatch({ type: actionTypes.SET_LOADING_STATE, isLoading: true });
     const user = await signInithGooglePopup();
     dispatch({ type: actionTypes.SET_USER, user });
+    dispatch({ type: actionTypes.SET_LOADING_STATE, isLoading: false });
   };
+
+  const loginWithMobile = event => {
+    event.preventDefault();
+  }
 
   return (
     <div className="login">
-      {isLoading ? (
-        <Player
-        autoplay
-        loop
-        src={loading_lottie_file}
-      >
-      </Player>
-      ) : (
-        <div className="login-container">
-          <img
-            src="https://res.cloudinary.com/dktwlx0dz/image/upload/v1686468269/whatsapp_clone_bi8s1l.png"
-            alt="whatsapp logo"
-          />
+      <div className="login-container">
+        {
+          isLoading ? <Loading /> : <>
+            <img
+              src="https://res.cloudinary.com/dktwlx0dz/image/upload/v1686468269/whatsapp_clone_bi8s1l.png"
+              alt="whatsapp logo"
+            />
+            <form className="mobile-login-form" onSubmit={loginWithMobile}>
+              <input placeholder="Mobile number" />
+              <Button type="submit" className="phone-login-button" >Mobile Login</Button>
+              <Button className="google-sign-in-button" onClick={loginEvent}>Sign In With Google</Button>
+            </form>
+          </>
+        }
 
-          <div className="login-text">
-            <h2>Sign in to WhatsApp</h2>
-          </div>
-
-          <Button onClick={loginEvent}>Sign In With Google</Button>
-        </div>
-      )}
+      </div>
     </div>
   );
 };
